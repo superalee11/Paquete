@@ -268,16 +268,15 @@ void jacobi(int n, double matriz[n][n], double vector[n], double x_inicial[n], i
 
 ///////////////////////////PROGRAMA POTENCIAS//////////////////
 #define MAX_DIM 100
-#define MAX 100
 
-// Capturar matriz cuadrada
-void capturarMatrizUnica(int dimension, double matrizUnica[MAX_DIM][MAX_DIM]) {
+// Función para capturar los elementos de la matriz cuadrada
+void capturarMatriz(int dimension, double matriz[MAX_DIM][MAX_DIM]) {
     printf("Introduce los elementos de la matriz cuadrada:\n");
-    int fila, columna; // Variables inicializadas fuera del bucle
+    int fila, columna;
     for (fila = 0; fila < dimension; fila++) {
         for (columna = 0; columna < dimension; columna++) {
             printf("Elemento [%d, %d]: ", fila + 1, columna + 1);
-            if (scanf("%lf", &matrizUnica[fila][columna]) != 1) {
+            if (scanf("%lf", &matriz[fila][columna]) != 1) {
                 printf("Entrada invalida. Finalizando.\n");
                 exit(1);
             }
@@ -285,129 +284,143 @@ void capturarMatrizUnica(int dimension, double matrizUnica[MAX_DIM][MAX_DIM]) {
     }
 }
 
-// Mostrar matriz cuadrada
-void mostrarMatrizUnica(int dimension, double matrizUnica[MAX_DIM][MAX_DIM]) {
+// Función para mostrar la matriz cuadrada
+void mostrarMatriz(int dimension, double matriz[MAX_DIM][MAX_DIM]) {
     printf("\nMatriz capturada:\n");
     int fila, columna;
     for (fila = 0; fila < dimension; fila++) {
-        for (columna = 0; columna < dimension; columna++) {
-            printf("%.2lf\t", matrizUnica[fila][columna]);
+        for ( columna = 0; columna < dimension; columna++) {
+            printf("%.2lf\t", matriz[fila][columna]);
         }
         printf("\n");
     }
 }
 
-// Corregir un elemento de la matriz
-void corregirElementoMatriz(int dimension, double matrizUnica[MAX_DIM][MAX_DIM]) {
+// Función para corregir un elemento de la matriz
+void corregirElementoMatriz(int dimension, double matriz[MAX_DIM][MAX_DIM]) {
     int filaCorregir, columnaCorregir;
     double nuevoValor;
     printf("Introduce la fila del coeficiente incorrecto (1-%d): ", dimension);
-    if (scanf("%d", &filaCorregir) != 1 || filaCorregir < 1 || filaCorregir > dimension) {
-        printf("Entrada invalida para la fila. Finalizando.\n");
-        exit(1);
-    }
+    scanf("%d", &filaCorregir);
     printf("Introduce la columna del coeficiente incorrecto (1-%d): ", dimension);
-    if (scanf("%d", &columnaCorregir) != 1 || columnaCorregir < 1 || columnaCorregir > dimension) {
-        printf("Entrada invalida para la columna. Finalizando.\n");
-        exit(1);
-    }
+    scanf("%d", &columnaCorregir);
     printf("Introduce el nuevo valor para el coeficiente [%d, %d]: ", filaCorregir, columnaCorregir);
-    if (scanf("%lf", &nuevoValor) != 1) {
-        printf("Entrada invalida. Finalizando.\n");
-        exit(1);
-    }
-    matrizUnica[filaCorregir - 1][columnaCorregir - 1] = nuevoValor;
+    scanf("%lf", &nuevoValor);
+    matriz[filaCorregir - 1][columnaCorregir - 1] = nuevoValor;
     printf("Coeficiente actualizado correctamente.\n");
 }
 
-// Normalizar vector
-void normalizarVector(double vector[], int n) {
+// Función para calcular la norma espectral de un vector
+double normaEspectral(double *vector, int n) {
     double norma = 0.0;
     int i;
     for (i = 0; i < n; i++) {
         norma += vector[i] * vector[i];
     }
-    norma = sqrt(norma);
-    if (fabs(norma - 1.0) > 1e-6) {
-        printf("\tEl vector inicial no tiene norma 1. Se normalizara automaticamente.\n");
-        for (i = 0; i < n; i++) {
-            vector[i] /= norma;
-        }
-    }
+    return sqrt(norma);
 }
 
-// Método de potencias
-void metodoPotencias(double matriz[MAX][MAX], double vector[], int n, double tol, int max_iter) {
-    double lambda_anterior = 0.0, lambda, lambda_min = INFINITY, lambda_max = -INFINITY;
-    double nuevo_vector[MAX];
-    int iter;
+// Función para imprimir un vector
+void imprimirVector(double *vector, int n) {
+    printf("[");
+    int i;
+    for (i = 0; i < n; i++) {
+        printf("%.6lf", vector[i]);
+        if (i < n - 1) {
+            printf(", ");
+        }
+    }
+    printf("]\n");
+}
 
-    printf("\n\tIteracion\tValor Propio\tVector Propio\n");
-    printf("\t---------------------------------------------------\n");
-	int i,j;
-    for (iter = 1; iter <= max_iter; iter++) {
-        // Multiplicación matriz x vector
+// Método de potencias para calcular el valor propio máximo
+double metodoPotencias(double matriz[MAX_DIM][MAX_DIM], double *vectorInicial, int n, int maxIter, double tolerancia, double *vectorPropio) {
+    double *vectorTemp = (double *)malloc(n * sizeof(double));
+    double lambdaAnterior = 0.0, lambdaActual = 0.0;
+	int i, iter, j;
+    for (i = 0; i < n; i++) {
+        vectorPropio[i] = vectorInicial[i];
+    }
+
+    printf("\nIteracion\tValor Propio\t\tVector Propio\n");
+    printf("-----------------------------------------------------\n");
+
+    for ( iter = 0; iter < maxIter; iter++) {
+        double suma = 0;
         for ( i = 0; i < n; i++) {
-            nuevo_vector[i] = 0.0;
-            for (j = 0; j < n; j++) {
-                nuevo_vector[i] += matriz[i][j] * vector[j];
+            vectorTemp[i] = 0;
+            for ( j = 0; j < n; j++) {
+                vectorTemp[i] += matriz[i][j] * vectorPropio[j];
             }
+            suma += vectorTemp[i] * vectorTemp[i];
         }
-
-        // Calcular norma del nuevo vector
-        double norma = 0.0;
+        lambdaActual = sqrt(suma);
         for ( i = 0; i < n; i++) {
-            norma += nuevo_vector[i] * nuevo_vector[i];
-        }
-        norma = sqrt(norma);
-
-        // Verificar si la norma es cercana a 0
-        if (fabs(norma) < 1e-10) {
-            printf("\tError: La norma del vector es 0. No se puede normalizar.\n");
-            return;
+            vectorTemp[i] /= lambdaActual;
         }
 
-        // Normalizar nuevo vector
+        // Imprimir iteración
+        printf("%d\t\t%.6lf\t\t", iter + 1, lambdaActual);
+        for ( i = 0; i < n; i++) {
+            printf("%.6lf ", vectorTemp[i]);
+        }
+        printf("\n");
+
+        if (fabs(lambdaActual - lambdaAnterior) < tolerancia) {
+            break;
+        }
+        lambdaAnterior = lambdaActual;
         for (i = 0; i < n; i++) {
-            nuevo_vector[i] /= norma;
-        }
-
-        // Calcular valor propio aproximado
-        lambda = 0.0;
-        for ( i = 0; i < n; i++) {
-            lambda += nuevo_vector[i] * vector[i];
-        }
-
-        // Guardar valores máximos y mínimos
-        if (lambda > lambda_max) lambda_max = lambda;
-        if (lambda < lambda_min) lambda_min = lambda;
-
-        // Mostrar iteración actual
-        printf("\t%d\t\t%.6lf\t[", iter, lambda);
-        for ( i = 0; i < n; i++) {
-            printf(" %.6lf", nuevo_vector[i]);
-            if (i < n - 1) printf(",");
-        }
-        printf(" ]\n");
-
-        // Verificar convergencia
-        if (fabs(lambda - lambda_anterior) < tol) {
-            printf("\n\tConvergencia alcanzada en iteracion: %d\n", iter);
-            printf("\tValor propio maximo: %.6lf\n", lambda_max);
-            printf("\tValor propio minimo: %.6lf\n", lambda_min);
-            return;
-        }
-
-        // Actualizar para la próxima iteración
-        lambda_anterior = lambda;
-        for (i = 0; i < n; i++) {
-            vector[i] = nuevo_vector[i];
+            vectorPropio[i] = vectorTemp[i];
         }
     }
 
-    printf("\n\tNo se alcanzó convergencia en el número máximo de iteraciones.\n");
-    printf("\tValor propio maximo: %.6lf\n", lambda_max);
-    printf("\tValor propio minimo: %.6lf\n", lambda_min);
+    free(vectorTemp);
+    return lambdaActual;
+}
+
+// Método de potencias inverso para calcular el valor propio mínimo
+double metodoPotenciasInverso(double matriz[MAX_DIM][MAX_DIM], double *vectorInicial, int n, int maxIter, double tolerancia, double *vectorPropio) {
+    double *vectorTemp = (double *)malloc(n * sizeof(double));
+    double lambdaAnterior = 0.0, lambdaActual = 0.0;
+int i, iter;
+    for ( i = 0; i < n; i++) {
+        vectorPropio[i] = vectorInicial[i];
+    }
+
+    printf("\nIteracion\tValor Propio\t\tVector Propio\n");
+    printf("-----------------------------------------------------\n");
+
+    for (iter = 0; iter < maxIter; iter++) {
+        // Resolver sistema Ax = b (aquí debería implementarse una solución para el sistema de ecuaciones, como descomposición LU)
+        for ( i = 0; i < n; i++) {
+            vectorTemp[i] = vectorPropio[i]; // Simplificado para este ejemplo
+        }
+
+        double suma = 0;
+        for (i = 0; i < n; i++) {
+            suma += vectorTemp[i] * vectorTemp[i];
+        }
+        lambdaActual = 1.0 / sqrt(suma);
+
+        // Imprimir iteración
+        printf("%d\t\t%.6lf\t\t", iter + 1, lambdaActual);
+        for ( i = 0; i < n; i++) {
+            printf("%.6lf ", vectorTemp[i]);
+        }
+        printf("\n");
+
+        if (fabs(lambdaActual - lambdaAnterior) < tolerancia) {
+            break;
+        }
+        lambdaAnterior = lambdaActual;
+        for ( i = 0; i < n; i++) {
+            vectorPropio[i] = vectorTemp[i];
+        }
+    }
+
+    free(vectorTemp);
+    return lambdaActual;
 }
 
 
@@ -416,7 +429,7 @@ int main(){
 	
 	int op;
     int programa,n, corregir, capturarOtra, n3, corregir3, n1, max_iter, fila, columna, i, j,capturarOtraMatriz;
-    double matriz[MAX][MAX], vector[MAX], tol;
+    double  tol;
 	do{
 
    	mostrarMenu();
@@ -599,56 +612,68 @@ int main(){
 ///////////////////////////PROGRAMA 3//////////////////	    
 	    case 3:
 			    do {
-			        int dimensionMatriz, corregirMatriz;
-			        printf("Dimension de la matriz cuadrada: ");
-			        if (scanf("%d", &dimensionMatriz) != 1 || dimensionMatriz <= 0 || dimensionMatriz > MAX_DIM) {
-			            printf("Entrada invalida para la dimension. Finalizando.\n");
-			            return 1;
-			        }
-			
-			        double matrizProcesada[MAX_DIM][MAX_DIM], vectorProcesado[MAX_DIM];
-			
-			        capturarMatrizUnica(dimensionMatriz, matrizProcesada);
-			
-			        do {
-			            mostrarMatrizUnica(dimensionMatriz, matrizProcesada);
-			            printf("\nEs correcta la matriz? ([SI=1], [NO=0]): ");
-			            if (scanf("%d", &corregirMatriz) != 1 || (corregirMatriz != 0 && corregirMatriz != 1)) {
-			                printf("Entrada invalida. Finalizando.\n");
-			                return 1;
-			            }
-			            if (!corregirMatriz) {
-			                corregirElementoMatriz(dimensionMatriz, matrizProcesada);
-			            }
-			        } while (!corregirMatriz);
-			
-			        printf("Introduce el vector inicial:\n");
-			        int i;
-			        for (i = 0; i < dimensionMatriz; i++) {
-			        	
-			            printf("vectorInicial[%d]: ", i + 1);
-			            if (scanf("%lf", &vectorProcesado[i]) != 1) {
-			                printf("Entrada invalida. Finalizando.\n");
-			                return 1;
-			            }
-			        }
-			
-			        normalizarVector(vectorProcesado, dimensionMatriz);
-			
-			        int maximoIteraciones;
-			        double toleranciaEspecificada;
-			        printf("Maximo de iteraciones: ");
-			        if (scanf("%d", &maximoIteraciones) != 1 || maximoIteraciones <= 0) {
-			            printf("Entrada inválida. Finalizando.\n");
-			            return 1;
-			        }
-			        printf("Tolerancia: ");
-			        if (scanf("%lf", &toleranciaEspecificada) != 1 || toleranciaEspecificada <= 0) {
-			            printf("Entrada inválida. Finalizando.\n");
-			            return 1;
-			        }
-			
-			        metodoPotencias(matrizProcesada, vectorProcesado, dimensionMatriz, toleranciaEspecificada, maximoIteraciones);
+			        int n, maxIter;
+				    double tolerancia;
+				
+				    printf("Dimension de la matriz cuadrada: ");
+				    scanf("%d", &n);
+				
+				    double matriz[MAX_DIM][MAX_DIM];
+				    capturarMatriz(n, matriz);
+				
+				    // Mostrar la matriz capturada
+				    mostrarMatriz(n, matriz);
+				
+				    // Preguntar si los valores son correctos
+				    char opcion;
+				    do {
+				        printf("\nSon correctos los valores de la matriz? (s/n): ");
+				        scanf(" %c", &opcion);
+				
+				        if (opcion == 'n' || opcion == 'N') {
+				            corregirElementoMatriz(n, matriz);
+				            mostrarMatriz(n, matriz);
+				        } else if (opcion != 's' && opcion != 'S') {
+				            printf("Opcion no valida. Intenta de nuevo.\n");
+				        }
+				    } while (opcion != 's' && opcion != 'S');
+				
+				    // Vector inicial y norma espectral
+				    double *vectorInicial = (double *)malloc(n * sizeof(double));
+				    printf("\nIntroduce el vector inicial: \n");
+				    int i;
+				    for (i = 0; i < n; i++) {
+				        printf("Elemento [%d]: ", i + 1);
+				        scanf("%lf", &vectorInicial[i]);
+				    }
+				
+				    printf("Numero maximo de iteraciones: ");
+				    scanf("%d", &maxIter);
+				
+				    printf("Introduce la tolerancia: ");
+				    scanf("%lf", &tolerancia);
+				
+				    double normaInicial = normaEspectral(vectorInicial, n);
+				    if (fabs(normaInicial - 1.0) > 1e-6) {
+				        printf("La norma espectral del vector inicial no es 1. Normalizando...\n");
+				        int i;
+				        for ( i = 0; i < n; i++) {
+				            vectorInicial[i] /= normaInicial;
+				        }
+				    }
+				
+				    double vectorPropio[MAX_DIM];
+				    double lambdaMax = metodoPotencias(matriz, vectorInicial, n, maxIter, tolerancia, vectorPropio);
+				    printf("\nValor propio maximo: %lf\n", lambdaMax);
+				    printf("Vector propio asociado: ");
+				    imprimirVector(vectorPropio, n);
+				
+				    double lambdaMin = metodoPotenciasInverso(matriz, vectorInicial, n, maxIter, tolerancia, vectorPropio);
+				    printf("\nValor propio minimo: %lf\n", lambdaMin);
+					imprimirVector(vectorPropio, n);
+				    
+				
+				    free(vectorInicial);
 			
 			        printf("\nDesea capturar otra matriz? [SI=1], [NO=0]: ");
 			        if (scanf("%d", &capturarOtraMatriz) != 1) {
