@@ -513,161 +513,161 @@ int main(){
 		        system("cls");
 		
 			    }while(op == 1);
+			    
 			    printf("\nGracias por utilizar el programa!\n");
 			    system("pause");
 				system("cls");
 	    		
-				break;//termina programa 1
+		break;//termina programa 1
 				
 ///////////////////////////PROGRAMA 2//////////////////
 		case 2:
 			
-    		do{
-	         printf("Dimension de la matriz cuadrada: ");
-			    if (scanf("%d", &n) != 1 || n <= 0) {
-			        printf("Entrada invalida para la dimension. Finalizando.\n");
-			        return 1;
-			    }
-			
-			    double matriz[n][n], vector[n], x_inicial[n];
-			    leermatriz(n, matriz, vector);
-			
-			    do {
-			        mostrarmatriz(n, matriz, vector);
-			        printf("\nEs correcta la matriz? ([SI=1], [NO=0]): ");
-			        if (scanf("%d", &corregir) != 1 || (corregir != 0 && corregir != 1)) {
-			            printf("Entrada invalida. Finalizando.\n");
-			            return 1;
-			        }
-			        if (!corregir) {
-			            corregircoeficiente(n, matriz, vector);
-			        }
-			    } while (!corregir);
-			
-			    int dominante = DD(n, matriz);
-			    double det = determinante(n, matriz);
-			
-			    if (det != 0) {
-			        printf("\nEl determinante es: %lf\n", det);
-			
-			        if (!dominante) {
-			            printf("\nLa matriz NO es EDD. La convergencia no se garantiza.\n");
-			        }
-			
-			        printf("Introduce el vector inicial:\n");
-			        int i;
-			        for (i = 0; i < n; i++) {
-			            printf("\nx_inicial[%d]: ", i + 1);
-			            if (scanf("%lf", &x_inicial[i]) != 1) {
-			                printf("Entrada invalida. Finalizando.\n");
-			                return 1;
-			            }
-			        }
-			
-			        int max_iter;
-			        double tol;
-			        printf("Maximo de iteraciones: ");
-			        if (scanf("%d", &max_iter) != 1 || max_iter <= 0) {
-			            printf("Entrada invalida para el numero de iteraciones. Finalizando.\n");
-			            return 1;
-			        }
-			        printf("Tolerancia: ");
-			        if (scanf("%lf", &tol) != 1 || tol <= 0) {
-			            printf("Entrada invalida para la tolerancia. Finalizando.\n");
-			            return 1;
-			        }
-			
-			        jacobi(n, matriz, vector, x_inicial, max_iter, tol);
-			    } else {
-			        printf("El determinante es 0. El sistema no tiene solucion unica.\n");
-			    }
-			    
-			    printf("¿Desea capturar otra matriz? [SI-1], [NO-0]: ");
-		        scanf("%d", &capturarOtra);
-		        system("pause");
-				system("cls");
-		
-			
-						
+	    	do{
+		         printf("Dimension de la matriz cuadrada: ");
+				    if (scanf("%d", &n) != 1 || n <= 0) {
+				        printf("Entrada invalida para la dimension. Finalizando.\n");
+				        return 1;
+				    }
+				
+				    double matriz[n][n], vector[n], x_inicial[n];
+				    leermatriz(n, matriz, vector);
+				
+				    do {
+				        mostrarmatriz(n, matriz, vector);
+				        printf("\nEs correcta la matriz? ([SI=1], [NO=0]): ");
+				        if (scanf("%d", &corregir) != 1 || (corregir != 0 && corregir != 1)) {
+				            printf("Entrada invalida. Finalizando.\n");
+				            return 1;
+				        }
+				        if (!corregir) {
+				            corregircoeficiente(n, matriz, vector);
+				        }
+				    } while (!corregir);
+				
+				    int dominante = DD(n, matriz);
+				    double det = determinante(n, matriz);
+				
+				    if (det != 0) {
+				        printf("\nEl determinante es: %lf\n", det);
+				
+				        if (!dominante) {
+				            printf("\nLa matriz NO es EDD. La convergencia no se garantiza.\n");
+				        }
+				
+				        printf("Introduce el vector inicial:\n");
+				        int i;
+				        for (i = 0; i < n; i++) {
+				            printf("\nx_inicial[%d]: ", i + 1);
+				            if (scanf("%lf", &x_inicial[i]) != 1) {
+				                printf("Entrada invalida. Finalizando.\n");
+				                return 1;
+				            }
+				        }
+				
+				        int max_iter;
+				        double tol;
+				        printf("Maximo de iteraciones: ");
+				        if (scanf("%d", &max_iter) != 1 || max_iter <= 0) {
+				            printf("Entrada invalida para el numero de iteraciones. Finalizando.\n");
+				            return 1;
+				        }
+				        printf("Tolerancia: ");
+				        if (scanf("%lf", &tol) != 1 || tol <= 0) {
+				            printf("Entrada invalida para la tolerancia. Finalizando.\n");
+				            return 1;
+				        }
+				
+				        jacobi(n, matriz, vector, x_inicial, max_iter, tol);
+				    } else {
+				        printf("El determinante es 0. El sistema no tiene solucion unica.\n");
+				    }
+				    
+				    printf("¿Desea capturar otra matriz? [SI-1], [NO-0]: ");
+			        scanf("%d", &capturarOtra);
+			        system("pause");
+					system("cls");			
+							
 			}while(capturarOtra);
-						
-				printf("\nGracias por utilizar el programa!\n");
-				system("pause");
-				system("cls");
+							
+					printf("\nGracias por utilizar el programa!\n");
+					system("pause");
+					system("cls");
 
 	    	break;
 
 ///////////////////////////PROGRAMA 3//////////////////	    
 	    case 3:
-
-    do {
-        int dimensionMatriz, corregirMatriz;
-        printf("Dimension de la matriz cuadrada: ");
-        if (scanf("%d", &dimensionMatriz) != 1 || dimensionMatriz <= 0 || dimensionMatriz > MAX_DIM) {
-            printf("Entrada invalida para la dimension. Finalizando.\n");
-            return 1;
-        }
-
-        double matrizProcesada[MAX_DIM][MAX_DIM], vectorProcesado[MAX_DIM];
-
-        capturarMatrizUnica(dimensionMatriz, matrizProcesada);
-
-        do {
-            mostrarMatrizUnica(dimensionMatriz, matrizProcesada);
-            printf("\nEs correcta la matriz? ([SI=1], [NO=0]): ");
-            if (scanf("%d", &corregirMatriz) != 1 || (corregirMatriz != 0 && corregirMatriz != 1)) {
-                printf("Entrada invalida. Finalizando.\n");
-                return 1;
-            }
-            if (!corregirMatriz) {
-                corregirElementoMatriz(dimensionMatriz, matrizProcesada);
-            }
-        } while (!corregirMatriz);
-
-        printf("Introduce el vector inicial:\n");
-        int i;
-        for (i = 0; i < dimensionMatriz; i++) {
-        	
-            printf("vectorInicial[%d]: ", i + 1);
-            if (scanf("%lf", &vectorProcesado[i]) != 1) {
-                printf("Entrada invalida. Finalizando.\n");
-                return 1;
-            }
-        }
-
-        normalizarVector(vectorProcesado, dimensionMatriz);
-
-        int maximoIteraciones;
-        double toleranciaEspecificada;
-        printf("Maximo de iteraciones: ");
-        if (scanf("%d", &maximoIteraciones) != 1 || maximoIteraciones <= 0) {
-            printf("Entrada inválida. Finalizando.\n");
-            return 1;
-        }
-        printf("Tolerancia: ");
-        if (scanf("%lf", &toleranciaEspecificada) != 1 || toleranciaEspecificada <= 0) {
-            printf("Entrada inválida. Finalizando.\n");
-            return 1;
-        }
-
-        metodoPotencias(matrizProcesada, vectorProcesado, dimensionMatriz, toleranciaEspecificada, maximoIteraciones);
-
-        printf("\nDesea capturar otra matriz? [SI=1], [NO=0]: ");
-        if (scanf("%d", &capturarOtraMatriz) != 1) {
-            printf("Entrada inválida. Finalizando.\n");
-            return 1;
-        }
-    } while (capturarOtraMatriz);
-
-		    
+			    do {
+			        int dimensionMatriz, corregirMatriz;
+			        printf("Dimension de la matriz cuadrada: ");
+			        if (scanf("%d", &dimensionMatriz) != 1 || dimensionMatriz <= 0 || dimensionMatriz > MAX_DIM) {
+			            printf("Entrada invalida para la dimension. Finalizando.\n");
+			            return 1;
+			        }
+			
+			        double matrizProcesada[MAX_DIM][MAX_DIM], vectorProcesado[MAX_DIM];
+			
+			        capturarMatrizUnica(dimensionMatriz, matrizProcesada);
+			
+			        do {
+			            mostrarMatrizUnica(dimensionMatriz, matrizProcesada);
+			            printf("\nEs correcta la matriz? ([SI=1], [NO=0]): ");
+			            if (scanf("%d", &corregirMatriz) != 1 || (corregirMatriz != 0 && corregirMatriz != 1)) {
+			                printf("Entrada invalida. Finalizando.\n");
+			                return 1;
+			            }
+			            if (!corregirMatriz) {
+			                corregirElementoMatriz(dimensionMatriz, matrizProcesada);
+			            }
+			        } while (!corregirMatriz);
+			
+			        printf("Introduce el vector inicial:\n");
+			        int i;
+			        for (i = 0; i < dimensionMatriz; i++) {
+			        	
+			            printf("vectorInicial[%d]: ", i + 1);
+			            if (scanf("%lf", &vectorProcesado[i]) != 1) {
+			                printf("Entrada invalida. Finalizando.\n");
+			                return 1;
+			            }
+			        }
+			
+			        normalizarVector(vectorProcesado, dimensionMatriz);
+			
+			        int maximoIteraciones;
+			        double toleranciaEspecificada;
+			        printf("Maximo de iteraciones: ");
+			        if (scanf("%d", &maximoIteraciones) != 1 || maximoIteraciones <= 0) {
+			            printf("Entrada inválida. Finalizando.\n");
+			            return 1;
+			        }
+			        printf("Tolerancia: ");
+			        if (scanf("%lf", &toleranciaEspecificada) != 1 || toleranciaEspecificada <= 0) {
+			            printf("Entrada inválida. Finalizando.\n");
+			            return 1;
+			        }
+			
+			        metodoPotencias(matrizProcesada, vectorProcesado, dimensionMatriz, toleranciaEspecificada, maximoIteraciones);
+			
+			        printf("\nDesea capturar otra matriz? [SI=1], [NO=0]: ");
+			        if (scanf("%d", &capturarOtraMatriz) != 1) {
+			            printf("Entrada inválida. Finalizando.\n");
+			            return 1;
+			        }
+			        system("pause");
+					system("cls");	
+					
+			    } while (capturarOtraMatriz);
+			    	printf("\nGracias por utilizar el programa!\n");
 	    			system("pause");
 					system("cls");
-			    	break;
+		break;
 		
 		
 		case 4:
-			printf("\nGracias por utilizar el programa!\n"); 
-			system("pause");
+					printf("\nGracias por utilizar el programa!\n"); 
+					system("pause");
 					system("cls");
 			break;
 			    
