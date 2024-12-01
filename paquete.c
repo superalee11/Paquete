@@ -227,7 +227,7 @@ void jacobi(int n, double matriz[n][n], double vector[n], double x_inicial[n], i
         x[i] = x_inicial[i];
     }
 
-    printf("\nIteracion\tVector solucion\t\t\t\tError\n");
+    printf("\nIteracion\tVector solucion\t\tError\n");
 
     for (k = 1; k <= max_iter; k++) {
         for (i = 0; i < n; i++) {
@@ -602,9 +602,9 @@ int main(){
 
     do {
         int dimensionMatriz, corregirMatriz;
-        printf("Dimensión de la matriz cuadrada: ");
+        printf("Dimension de la matriz cuadrada: ");
         if (scanf("%d", &dimensionMatriz) != 1 || dimensionMatriz <= 0 || dimensionMatriz > MAX_DIM) {
-            printf("Entrada inválida para la dimensión. Finalizando.\n");
+            printf("Entrada invalida para la dimension. Finalizando.\n");
             return 1;
         }
 
@@ -614,9 +614,9 @@ int main(){
 
         do {
             mostrarMatrizUnica(dimensionMatriz, matrizProcesada);
-            printf("\n¿Es correcta la matriz? ([SI=1], [NO=0]): ");
+            printf("\nEs correcta la matriz? ([SI=1], [NO=0]): ");
             if (scanf("%d", &corregirMatriz) != 1 || (corregirMatriz != 0 && corregirMatriz != 1)) {
-                printf("Entrada inválida. Finalizando.\n");
+                printf("Entrada invalida. Finalizando.\n");
                 return 1;
             }
             if (!corregirMatriz) {
@@ -630,7 +630,7 @@ int main(){
         	
             printf("vectorInicial[%d]: ", i + 1);
             if (scanf("%lf", &vectorProcesado[i]) != 1) {
-                printf("Entrada inválida. Finalizando.\n");
+                printf("Entrada invalida. Finalizando.\n");
                 return 1;
             }
         }
@@ -639,7 +639,7 @@ int main(){
 
         int maximoIteraciones;
         double toleranciaEspecificada;
-        printf("Máximo de iteraciones: ");
+        printf("Maximo de iteraciones: ");
         if (scanf("%d", &maximoIteraciones) != 1 || maximoIteraciones <= 0) {
             printf("Entrada inválida. Finalizando.\n");
             return 1;
@@ -652,7 +652,7 @@ int main(){
 
         metodoPotencias(matrizProcesada, vectorProcesado, dimensionMatriz, toleranciaEspecificada, maximoIteraciones);
 
-        printf("\n¿Desea capturar otra matriz? [SI=1], [NO=0]: ");
+        printf("\nDesea capturar otra matriz? [SI=1], [NO=0]: ");
         if (scanf("%d", &capturarOtraMatriz) != 1) {
             printf("Entrada inválida. Finalizando.\n");
             return 1;
@@ -684,10 +684,9 @@ int main(){
 		}//llave switch
 		
 		
-	}while (programa != 0);
-	
-		printf("\nGracias por utilizar el programa!\n"); 
+	}while (programa != 4);
 
+printf("\nGracias por utilizar el programa!\n"); 
 return 0;
 
 }
