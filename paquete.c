@@ -212,7 +212,7 @@ void resolver(int n, double matriz[][n], double vector[]) {
         soluciones[i] /= matriz[i][i];
     }
 
-    printf("\nSolución del sistema:\n");
+    printf("\nSolucion del sistema:\n");
     for (i = 0; i < n; i++) {
         printf("x[%d] = %lf\n", i + 1, soluciones[i]);
     }
